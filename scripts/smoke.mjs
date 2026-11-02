@@ -13,7 +13,7 @@ try {
   });
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto(process.env.APP_URL || "http://127.0.0.1:5173");
+  await page.goto(process.env.APP_URL || "http://127.0.0.1:5173/bike-geometry-calculator/");
   await page.getByRole("heading", { level: 1 }).waitFor();
   assert.equal(await page.locator("svg").count(), 1);
   const cockpit = page.locator(".stats .accent strong");

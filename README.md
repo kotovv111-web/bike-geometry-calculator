@@ -11,7 +11,7 @@ npm ci
 npm run dev
 ```
 
-Vite запускає сервер на порту 5173. `npm run build` перевіряє TypeScript і створює `dist/`; `npm run preview` дозволяє перевірити production-збірку.
+Vite запускає сервер на порту 5173; відкрийте `http://localhost:5173/bike-geometry-calculator/`. `npm run build` перевіряє TypeScript і створює `dist/`; `npm run preview` дозволяє перевірити production-збірку.
 
 ## Реалізовано
 
@@ -73,3 +73,39 @@ CHROMIUM_PATH=/usr/bin/chromium npm run test:browser
 ## GitHub
 
 Зберігайте вихідні файли та `package-lock.json`. `node_modules/`, `dist/` і кеш TypeScript виключені через `.gitignore`. Перед комітом виконайте перевірки вище та перегляньте `git diff --cached` або `git diff`. Рекомендований коміт: `feat: add bike geometry and cockpit comparison calculator`.
+
+
+## Публікація на GitHub Pages
+
+Адреса сайту після успішної публікації:
+
+**https://kotovv111-web.github.io/bike-geometry-calculator/**
+
+Одноразове налаштування власником репозиторію:
+
+1. Відкрийте репозиторій на GitHub → **Settings → Pages**.
+2. У розділі **Build and deployment → Source** виберіть **GitHub Actions**.
+3. Відкрийте **Actions → Deploy calculator to GitHub Pages**. Якщо попередній запуск завершився помилкою через ще не ввімкнений Pages, натисніть **Re-run all jobs**. Також можна запустити **Run workflow** для `main`.
+4. Дочекайтеся успішного завершення обох завдань: `build` і `deploy`. Посилання доступне в результатах deployment і в **Settings → Pages**.
+5. Відкрийте адресу сайту в Safari на MacBook або iPhone. Встановлення Node.js чи інших програм для користування сайтом не потрібне.
+
+Workflow `.github/workflows/deploy-pages.yml` запускається при кожному push у `main` або вручну. Він встановлює залежності через `npm ci`, запускає математичні тести, перевіряє TypeScript, збирає `dist/` і публікує його через офіційні Pages actions. Доступ на запис обмежено deployment-завданням; окремий токен або секрет не потрібен.
+
+`vite.config.ts` задає базовий шлях `/bike-geometry-calculator/`, щоб JS і CSS правильно завантажувались на сторінці проєкту. Якщо назва репозиторію зміниться, оновіть цей шлях.
+
+Для перевірки production-збірки локально:
+
+```sh
+npm run build
+npm run preview -- --port 4173
+```
+
+Відкрийте `http://localhost:4173/bike-geometry-calculator/`. Для браузерного smoke-тесту з іншим запущеним сервером:
+
+```sh
+APP_URL=http://localhost:4173/bike-geometry-calculator/ npm run test:browser
+```
+
+На опублікованому сайті змініть проставки: креслення й координати керма мають змінитися. Перейдіть на велосипед B, змініть Stack і перевірте таблицю різниць. Перезавантажте сторінку — коректні параметри мають зберегтися, якщо Safari дозволяє локальне сховище. Дані зберігаються окремо на кожному пристрої та не синхронізуються.
+
+Якщо deployment не запускається, перевірте, що GitHub Actions дозволено в **Settings → Actions → General**. Якщо GitHub повідомляє про недоступність Pages для поточного плану або приватного репозиторію, скористайтеся доступним планом чи публічним репозиторієм. Видимість репозиторію workflow не змінює. Публікація робить застосунок доступним за публічною адресою; персональні параметри калькулятора залишаються у браузері.
